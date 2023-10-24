@@ -305,6 +305,48 @@ void bcm_poll()
 		bcm_update_timestamp[bcm_id] = st_get_tick();
 	//}
 }
+
+typedef struct
+{
+	char rxByte;
+	char rxBuff[256];
+	uint8_t rxCntBuff;
+} t_UART_Data;
+
+t_UART_Data UART_Data;
+uint8_t rxByteCMD;
+static uint8_t numCMD = 0;
+int i;
+
+#define NUM_CMD    2
+
+const char listCMD[NUM_CMD][8] = {"PowerON", "PowerOFF"};
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if (huart->Instance == USART1)
+	{
+		if (rxByteCMD == 0x0A)
+		{
+			for (i = 0; i < NUM_CMD; i++)
+			{
+				if (strstr((char*) &UART_Data.rxBuff[0], (char*) &listCMD[i][0])!= 0)
+				{
+					break;
+				}
+			}
+			numCMD = i + 1;
+			memset((char*) &UART_Data, 0x00, sizeof(UART_Data));
+		}
+		else
+		{
+			UART_Data.rxBuff[UART_Data.rxCntBuff] = rxByteCMD;
+			UART_Data.rxCntBuff++;
+		}
+		HAL_UART_Receive_IT(&huart1,  &rxByteCMD, 1);
+
+	}
+}
 /* USER CODE END 0 */
 
 /**
@@ -338,7 +380,8 @@ int main(void)
   MX_I2C1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  HAL_UART_Transmit(&huart1, (uint8_t*) "Start PSU Test Board\n", sizeof("Start PSU Test Board\n"), 100);
+  HAL_UART_Receive_IT(&huart1, &rxByteCMD, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -348,6 +391,10 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  HAL_GPIO_WritePin(GPIOB, BCM_EN0_Pin|BCM_EN1_Pin, GPIO_PIN_RESET);
+	  HAL_Delay(100);
+	  HAL_GPIO_WritePin(GPIOB, BCM_EN0_Pin|BCM_EN1_Pin, GPIO_PIN_SET);
+	  HAL_Delay(200);
   }
   /* USER CODE END 3 */
 }
