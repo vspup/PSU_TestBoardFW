@@ -395,6 +395,23 @@ int main(void)
 	  HAL_Delay(100);
 	  HAL_GPIO_WritePin(GPIOB, BCM_EN0_Pin|BCM_EN1_Pin, GPIO_PIN_SET);
 	  HAL_Delay(200);
+
+	  if (numCMD != 0)
+	  {
+		    if(numCMD == 1)
+		    {
+
+			}
+			else if(numCMD == 2)
+			{
+
+			}
+			else
+			{
+				//MultisensorHandler(numCMD);
+			}
+			numCMD = 0;
+		}
   }
   /* USER CODE END 3 */
 }
