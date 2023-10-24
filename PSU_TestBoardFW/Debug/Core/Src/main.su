@@ -1,0 +1,9 @@
+../Core/Src/main.c:141:16:bcm_print_supervisor_serial	56	static
+../Core/Src/main.c:204:12:bcm_read_pmbus_value	48	static
+../Core/Src/main.c:251:6:bcm_poll	24	static
+../Core/Src/main.c:314:5:main	8	static
+../Core/Src/main.c:359:6:SystemClock_Config	88	static
+../Core/Src/main.c:400:13:MX_I2C1_Init	8	static
+../Core/Src/main.c:448:13:MX_USART1_UART_Init	8	static
+../Core/Src/main.c:496:13:MX_GPIO_Init	48	static
+../Core/Src/main.c:528:6:Error_Handler	8	static,ignoring_inline_asm
